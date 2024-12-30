@@ -1,16 +1,14 @@
-import "../styles/index.css";
-
 /* index.js */
 // === Main Initialization and Barba.js Transitions ===
 
+import "../styles/index.css";
 import barba from "@barba/core";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { initializeLenis, lenisInstance } from "/js/lenis.js";
-import {
-  configureScrollTrigger,
-  refreshScrollTrigger,
-} from "/js/scrollTrigger.js";
+import { initializeLenis } from "/js/lenis.js";
+import { lenisInstance } from "/js/lenis.js";
+import { configureScrollTrigger } from "/js/scrollTrigger.js";
+import { refreshScrollTrigger } from "/js/scrollTrigger.js";
 import {
   pageEnterAnimations,
   checkAndUpdateBodyClass,
@@ -27,8 +25,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Log to confirm index.js is loaded
 console.log("Index.js loaded");
-
-console.log("Let's try this again");
 
 // Initialize Lenis and assign to global window for accessibility
 window.lenisInstance = initializeLenis();
