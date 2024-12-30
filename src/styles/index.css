@@ -1,4 +1,71 @@
-body {
-  margin: 0;
-  padding: 0;
+/* style.css */
+/* ------------------------- Barbar -------------------------------------------------- */
+
+[data-barba="container"] {
+  position: relative;
+  overflow: visible;
+  min-height: 100vh;
+}
+
+/* This ensures content is visible in Webflow editor */
+
+.w-editor-body [data-transition="height"] {
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.w-editor-body [data-transition="fade-title"],
+.w-editor-body [data-transition="fade-only"],
+.w-editor-body [data-transition="fade"] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* ------------------------- Hero animation -------------------------------------------------- */
+
+.hero-line h1,
+.hero-line p {
+  transform-origin: bottom left;
+  display: inline-block;
+}
+
+.hero-line span {
+  display: inline-block;
+}
+
+.hero-sub-text:after {
+  width: 0;
+  transition: all 400ms ease;
+  content: " ";
+  position: absolute;
+  bottom: 0;
+  height: 1px;
+  left: 0;
+  background: #111;
+}
+
+.hero-line.ready .hero-sub-text:after {
+  width: 100%;
+}
+
+.hero-sub-text {
+  font-size: clamp(0.5vw, 1.2em, 1.2em);
+}
+
+/* ------------------------- Nav states -------------------------------------------------- */
+
+.nav {
+  color: black;
+  transition: all 400ms ease;
+}
+
+._on-project .nav {
+  color: white;
+}
+
+.image-wrap.--pinned .img-inner-wrap {
+  outline-color: var(--color-white);
+  outline-width: 0.2em;
+  outline-style: solid;
+  box-shadow: 0 2px 80px #0000001a;
 }
