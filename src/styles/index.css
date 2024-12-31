@@ -65,22 +65,59 @@
 
 /* ------------------------- stackOpacity effect -------------------------------------------------- */
 
-.image-wrap {
+.img-inner-wrap {
   position: relative;
 }
 
-.image-wrap::after {
+.img-inner-wrap::after {
   content: "";
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
-  height: 100%;
+  height: 9999px;
+  margin-top: -50%;
   pointer-events: none;
   background: var(--color-sketch-bg);
   opacity: 0;
 }
 
-.image-wrap.--pinned::after {
+.image-wrap.--pinned[data-stack="0"] .img-inner-wrap::after {
   opacity: 0;
+}
+
+.image-wrap.--pinned[data-stack="1"] .img-inner-wrap::after {
+  opacity: 0.4;
+}
+
+.image-wrap.--pinned[data-stack="2"] .img-inner-wrap::after {
+  opacity: 0.7;
+}
+
+.image-wrap.--pinned[data-stack="3"] .img-inner-wrap::after {
+  opacity: 1;
+}
+
+.image-wrap.--pinned[data-stack="4"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="5"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="6"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="7"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="8"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="9"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="10"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="11"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="12"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="13"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="14"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="15"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="16"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="17"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="18"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="19"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="20"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="21"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="22"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="23"] .img-inner-wrap::after,
+.image-wrap.--pinned[data-stack="24"] .img-inner-wrap::after {
+  opacity: 1;
 }
