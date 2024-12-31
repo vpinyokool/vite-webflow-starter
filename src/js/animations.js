@@ -3,18 +3,9 @@
 
 import gsap from "gsap";
 
-import { isMobileDevice } from "/js/device.js";
 import { lenisInstance } from "/js/lenis.js";
-import { refreshScrollTrigger } from "/js/scrollTrigger.js";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SplitType from "split-type";
-import {
-  dur,
-  ease,
-  heroDur,
-  heroStagger,
-  rotationRange,
-} from "/js/constants.js";
+
+import { dur, ease } from "/js/constants.js";
 import { splitAndAnimateText } from "/js/textAnimations.js";
 
 export function checkAndUpdateBodyClass() {

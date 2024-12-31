@@ -3,20 +3,12 @@
 
 import gsap from "gsap";
 
-import { isMobileDevice } from "/js/device.js";
-import { lenisInstance } from "/js/lenis.js";
-import { refreshScrollTrigger } from "/js/scrollTrigger.js";
+import { isMobileDevice } from "./device.js";
+
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SplitType from "split-type";
-import {
-  dur,
-  ease,
-  heroDur,
-  heroStagger,
-  rotationRange,
-  stackOffset,
-} from "/js/constants.js";
-import { splitAndAnimateText } from "/js/textAnimations.js";
+
+import { ensureImageHeights } from "./ensureImageHeights.js";
+import { ease, rotationRange, stackOffset } from "/js/constants.js";
 
 const getEndOffset = () => {
   const offset = window.innerHeight * stackOffset;
@@ -32,6 +24,13 @@ export function initStackingEffect() {
     console.warn("Stacking effect disabled on mobile devices.");
     return;
   }
+
+  //   try {
+  //     await ensureImageHeights();
+  //   } catch (error) {
+  //     console.error("Error ensuring image heights:", error);
+  //     return;
+  //   }
 
   // Kill existing ScrollTrigger instances
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());

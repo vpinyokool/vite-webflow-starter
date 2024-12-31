@@ -15,13 +15,7 @@ import {
   checkAndUpdateBodyClass,
   resetScroll,
 } from "/js/animations.js";
-import {
-  dur,
-  ease,
-  heroDur,
-  scaleAmount,
-  borderRadius,
-} from "/js/constants.js";
+import { dur, ease, scaleAmount, borderRadius } from "/js/constants.js";
 
 // Register the plugin
 gsap.registerPlugin(ScrollTrigger);
