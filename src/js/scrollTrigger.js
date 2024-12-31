@@ -1,21 +1,12 @@
 /* scrollTrigger.js */
-// === ScrollTrigger Configuration and Scroller Proxy Setup ===
-import gsap from "gsap";
 
+import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { isDesktopDevice, isMobileDevice } from "/js/device.js";
 import { lenisInstance } from "/js/lenis.js";
-import { initStackingEffect } from "/js/animations.js";
+import { initStackingEffect } from "/js/stackEffects.js";
 
 export function configureScrollTrigger() {
-  // Register ScrollTrigger plugin with GSAP
-  if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
-    gsap.registerPlugin(ScrollTrigger);
-  } else {
-    console.error("GSAP or ScrollTrigger is not loaded.");
-    return;
-  }
-
   // Configure ScrollTrigger defaults
   ScrollTrigger.config({
     limitCallbacks: true,

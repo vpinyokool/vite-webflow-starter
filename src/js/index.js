@@ -9,16 +9,19 @@ import { initializeLenis } from "/js/lenis.js";
 import { lenisInstance } from "/js/lenis.js";
 import { configureScrollTrigger } from "/js/scrollTrigger.js";
 import { refreshScrollTrigger } from "/js/scrollTrigger.js";
+import { initStackingEffect } from "/js/stackEffects.js";
 import {
   pageEnterAnimations,
   checkAndUpdateBodyClass,
   resetScroll,
+} from "/js/animations.js";
+import {
   dur,
   ease,
+  heroDur,
   scaleAmount,
   borderRadius,
-  initStackingEffect,
-} from "/js/animations.js";
+} from "/js/constants.js";
 
 // Register the plugin
 gsap.registerPlugin(ScrollTrigger);
