@@ -89,6 +89,10 @@ svg {
   left: calc(50% - $circle-size-1 / 2);
   transform-origin: 30% 50%;
   animation: moveInCircle 30s ease infinite;
+  @media (max-width: 478px) {
+    transform-origin: 45% 48%;
+    top: 0;
+  }
 }
 
 .g2 {
