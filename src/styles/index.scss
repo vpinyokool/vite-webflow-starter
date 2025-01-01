@@ -1,16 +1,12 @@
 /* style.scss */
 /* ------------------------- Vars -------------------------------------------------- */
 
-$color-g1: #AFEEC7;
-$color-g2: #E4FADF;
-$color-gi: #BAFAD3;
-// $color-g1: green;
-// $color-g2: red;
-// $color-gi: blue;
+$color-g1: #afeec7;
+$color-g2: #e4fadf;
+$color-gi: #bafad3;
 $circle-size-1: 80%;
 $circle-size-2: 150%;
 $blending: overlay;
-
 
 /* ------------------------- Animation -------------------------------------------------- */
 
@@ -18,11 +14,11 @@ $blending: overlay;
   0% {
     transform: rotate(0deg);
   }
-  
+
   50% {
     transform: rotate(180deg);
   }
-  
+
   100% {
     transform: rotate(360deg);
   }
@@ -32,11 +28,11 @@ $blending: overlay;
   0% {
     transform: translateY(-50%);
   }
-  
+
   50% {
     transform: translateY(50%);
   }
-  
+
   100% {
     transform: translateY(-50%);
   }
@@ -44,7 +40,6 @@ $blending: overlay;
 
 /* ------------------------- Gradient stuff -------------------------------------------------- */
 
- 
 svg {
   position: fixed;
   top: 0;
@@ -59,7 +54,6 @@ svg {
   }
 }
 
-main,
 .g-wrapper {
   width: 100vw;
   height: 100vh;
@@ -72,17 +66,23 @@ main,
   @media (max-width: 478px) {
     filter: none;
   }
-  
 }
 
-.g1, .g2, .gi {
+.g1,
+.g2,
+.gi {
   position: absolute;
   mix-blend-mode: $blending;
   opacity: 1;
 }
 
 .g1 {
-  background: radial-gradient(circle at center, rgba($color-g1, 0.8) 0%, rgba($color-g1, 0) 50%) no-repeat;
+  background: radial-gradient(
+      circle at center,
+      rgba($color-g1, 0.8) 0%,
+      rgba($color-g1, 0) 50%
+    )
+    no-repeat;
   width: $circle-size-1;
   height: $circle-size-1;
   top: calc(50% - $circle-size-1 / 2);
@@ -92,7 +92,12 @@ main,
 }
 
 .g2 {
-  background: radial-gradient(circle at center, rgba($color-g2, 0.8) 0%, rgba($color-g2, 0) 50%) no-repeat;
+  background: radial-gradient(
+      circle at center,
+      rgba($color-g2, 0.8) 0%,
+      rgba($color-g2, 0) 50%
+    )
+    no-repeat;
   width: $circle-size-2;
   height: $circle-size-2;
   top: calc(50% - $circle-size-2 / 2);
@@ -102,15 +107,20 @@ main,
 }
 
 .gi {
-  background: radial-gradient(circle at center, rgba($color-gi, 0.8) 0%, rgba($color-gi, 0) 50%) no-repeat;
+  background: radial-gradient(
+      circle at center,
+      rgba($color-gi, 0.8) 0%,
+      rgba($color-gi, 0) 50%
+    )
+    no-repeat;
   width: 100%;
   height: 100%;
   opacity: 0.7;
   top: -50%;
   left: -50%;
-  @media (max-width: 478px) {
-    display: none;
-  }
+  // @media (max-width: 478px) {
+  //   display: none;
+  // }
 }
 
 /* ------------------------- Barbar -------------------------------------------------- */
@@ -135,11 +145,11 @@ main,
   }
 }
 
-
 /* ------------------------- Hero animation -------------------------------------------------- */
 
 .hero-line {
-  h1, p {
+  h1,
+  p {
     transform-origin: bottom left;
     display: inline-block;
   }
@@ -148,7 +158,6 @@ main,
     display: inline-block;
   }
 }
-
 
 .hero-sub-text:after {
   width: 0;
