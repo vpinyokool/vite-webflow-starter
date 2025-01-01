@@ -1,0 +1,24 @@
+document.addEventListener("DOMContentLoaded", function () {
+  const interBubble = document.querySelector(".gi");
+  let curX = 0;
+  let curY = 0;
+  let tgX = 0;
+  let tgY = 0;
+
+  function move() {
+    curX += (tgX - curX) / 20;
+    curY += (tgY - curY) / 20;
+    if (interBubble) {
+      interBubble.style.transform =
+        "translate(" + Math.round(curX) + "px, " + Math.round(curY) + "px)";
+    }
+    requestAnimationFrame(move);
+  }
+
+  window.addEventListener("mousemove", function (event) {
+    tgX = event.clientX;
+    tgY = event.clientY;
+  });
+
+  move();
+});

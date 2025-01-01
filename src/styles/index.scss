@@ -1,4 +1,110 @@
-/* style.css */
+/* style.scss */
+/* ------------------------- Vars -------------------------------------------------- */
+
+$color-g1: #AFEEC7;
+$color-g2: #E4FADF;
+$color-gi: #BAFAD3;
+// $color-g1: green;
+// $color-g2: red;
+// $color-gi: blue;
+$circle-size-1: 80%;
+$circle-size-2: 150%;
+$blending: overlay;
+
+
+/* ------------------------- Animation -------------------------------------------------- */
+
+@keyframes moveInCircle {
+  0% {
+    transform: rotate(0deg);
+  }
+  
+  50% {
+    transform: rotate(180deg);
+  }
+  
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes moveVertical {
+  0% {
+    transform: translateY(-50%);
+  }
+  
+  50% {
+    transform: translateY(50%);
+  }
+  
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+/* ------------------------- Gradient stuff -------------------------------------------------- */
+
+ 
+svg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+main,
+.g-wrapper {
+  width: 100vw;
+  height: 100vh;
+}
+
+main {
+  position: relative;
+}
+
+.g-container {
+  width: 100%;
+  height: 100%;
+  filter: url(#goo) blur(32px);
+  
+}
+
+.g1, .g2, .gi {
+  position: absolute;
+  mix-blend-mode: $blending;
+  opacity: 1;
+}
+
+.g1 {
+  background: radial-gradient(circle at center, rgba($color-g1, 0.8) 0%, rgba($color-g1, 0) 50%) no-repeat;
+  width: $circle-size-1;
+  height: $circle-size-1;
+  top: calc(50% - $circle-size-1 / 2);
+  left: calc(50% - $circle-size-1 / 2);
+  transform-origin: 30% 50%;
+  animation: moveInCircle 30s ease infinite;
+}
+
+.g2 {
+  background: radial-gradient(circle at center, rgba($color-g2, 0.8) 0%, rgba($color-g2, 0) 50%) no-repeat;
+  width: $circle-size-2;
+  height: $circle-size-2;
+  top: calc(50% - $circle-size-2 / 2);
+  left: calc(50% - $circle-size-2 / 2);
+  transform-origin: 30% 50%;
+  animation: moveVertical 30s ease infinite;
+}
+
+.gi {
+  background: radial-gradient(circle at center, rgba($color-gi, 0.8) 0%, rgba($color-gi, 0) 50%) no-repeat;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  top: -50%;
+  left: -50%;
+}
+
 /* ------------------------- Barbar -------------------------------------------------- */
 
 [data-barba="container"] {
@@ -8,30 +114,33 @@
 }
 
 /* This ensures content is visible in Webflow editor */
-
-.w-editor-body [data-transition="height"] {
-  height: auto !important;
-  overflow: visible !important;
+.w-editor-body {
+  [data-transition="height"] {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  [data-transition="fade-title"],
+  [data-transition="fade-only"],
+  [data-transition="fade"] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
-.w-editor-body [data-transition="fade-title"],
-.w-editor-body [data-transition="fade-only"],
-.w-editor-body [data-transition="fade"] {
-  opacity: 1 !important;
-  transform: none !important;
-}
 
 /* ------------------------- Hero animation -------------------------------------------------- */
 
-.hero-line h1,
-.hero-line p {
-  transform-origin: bottom left;
-  display: inline-block;
+.hero-line {
+  h1, p {
+    transform-origin: bottom left;
+    display: inline-block;
+  }
+
+  span {
+    display: inline-block;
+  }
 }
 
-.hero-line span {
-  display: inline-block;
-}
 
 .hero-sub-text:after {
   width: 0;

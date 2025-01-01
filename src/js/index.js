@@ -2,7 +2,7 @@
 // === Main Initialization and Barba.js Transitions ===
 
 // Import necessary styles and libraries
-import "../styles/index.css";
+import "../styles/index.scss";
 import barba from "@barba/core";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -17,6 +17,7 @@ import {
   checkAndUpdateBodyClass,
   resetScroll,
 } from "/js/animations.js";
+import { bgConfig } from "/js/heroBg.js";
 import { dur, ease, scaleAmount, borderRadius } from "/js/constants.js";
 
 // Register the GSAP ScrollTrigger plugin
@@ -50,6 +51,7 @@ $(window).on("load", function () {
 
   // Initialize animations and body class
   initializeAnimations();
+  bgConfig();
 
   // === Barba.js Hooks and Transitions ===
 
@@ -101,6 +103,7 @@ $(window).on("load", function () {
             })
               .add(() => {
                 pageEnterAnimations();
+                bgConfig();
               })
               .add(() => {
                 // Kill existing ScrollTriggers and refresh
