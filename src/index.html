@@ -7,33 +7,7 @@
     <title>Gradient</title>
   </head>
   <body>
-    <main>
-      <svg xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <filter id="goo">
-            <feGaussianBlur
-              in="SourceGraphic"
-              stdDeviation="10"
-              result="blur"
-            />
-            <feColorMatrix
-              in="blur"
-              type="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
-              result="goo"
-            />
-            <feBlend in="SourceGraphic" in2="goo" />
-          </filter>
-        </defs>
-      </svg>
-
-      <div class="g-container">
-        <div class="g1"></div>
-        <div class="g2"></div>
-        <div class="gi"></div>
-      </div>
-    </main>
-    <!-- <script type="module" src="/js/index.js"></script> -->
-    <script type="module" src="/js/gradient.js"></script>
+    <main></main>
+    <script type="module" src="/js/index.js"></script>
   </body>
 </html>
