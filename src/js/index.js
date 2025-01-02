@@ -1,144 +1,133 @@
 /* index.js */
-/* index.js */
-/* index.js */
-
-/* index.js */
-// === Main Initialization and Barba.js Transitions ===
-
-// Import necessary styles and libraries
-import "../styles/index.scss";
+// === Imports ===
+// Core libraries
 import barba from "@barba/core";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+// Styles
+import "../styles/index.scss";
+
+// Local modules
 import { initializeLenis, lenisInstance } from "/js/lenis.js";
-import {
-  configureScrollTrigger,
-  refreshScrollTrigger,
-} from "/js/scrollTrigger.js";
+import { configureScrollTrigger, refreshScrollTrigger } from "/js/scrollTrigger.js";
 import { initStackingEffect } from "/js/stackEffects.js";
-import {
-  pageEnterAnimations,
-  checkAndUpdateBodyClass,
-  resetScroll,
-} from "/js/animations.js";
+import { pageEnterAnimations, checkAndUpdateBodyClass, resetScroll } from "/js/animations.js";
 import { bgConfig } from "/js/heroBg.js";
 import { dur, ease, scaleAmount, borderRadius } from "/js/constants.js";
 
-// Register the GSAP ScrollTrigger plugin
+// === GSAP Setup ===
 gsap.registerPlugin(ScrollTrigger);
 
-// Log to confirm index.js is loaded
-console.log("Index.js loaded");
-
-// Wait for the entire page, including all resources, to load
+// === Main Initialization ===
 $(window).on("load", function () {
-  // Initialize Lenis and assign to global window for accessibility
-  window.lenisInstance = initializeLenis();
+    // Initialize core functionality
+    window.lenisInstance = initializeLenis();
+    configureScrollTrigger();
 
-  // Setup ScrollTrigger configuration and scrollerProxy
-  configureScrollTrigger();
-
-  // Start the Lenis animation frame loop if Lenis is initialized
-  if (lenisInstance) {
-    function raf(time) {
-      lenisInstance.raf(time);
-      requestAnimationFrame(raf);
+    // Setup Lenis animation frame loop
+    if (lenisInstance) {
+        const raf = (time) => {
+            lenisInstance.raf(time);
+            requestAnimationFrame(raf);
+        };
+        requestAnimationFrame(raf);
     }
-    requestAnimationFrame(raf);
-  }
 
-  // Function to initialize animations and body class
-  function initializeAnimations() {
+    // Initialize page animations and configuration
+    initializeAnimations();
+    bgConfig();
+    setupBarbaTransitions();
+
+    // Handle window resize
+    $(window).on("resize", () => ScrollTrigger.refresh());
+});
+
+// === Helper Functions ===
+function initializeAnimations() {
     pageEnterAnimations();
     checkAndUpdateBodyClass();
-  }
+}
 
-  // Initialize animations and body class
-  initializeAnimations();
-  bgConfig();
-
-  // === Barba.js Hooks and Transitions ===
-
-  function setupBarbaTransitions() {
+// === Barba.js Configuration ===
+function setupBarbaTransitions() {
+    // Setup Barba hooks
     barba.hooks.beforeEnter(() => {
-      // Kill all existing ScrollTrigger instances before new content is loaded
-      ScrollTrigger.getAll().forEach((st) => st.kill());
+        ScrollTrigger.getAll().forEach(st => st.kill());
     });
 
-    barba.hooks.after(() => {
-      // Refresh ScrollTrigger and reset scroll position after new content is loaded
-      ScrollTrigger.refresh(true);
-      window.scrollTo(0, 0);
-      if (typeof initStackingEffect === "function") {
-        initStackingEffect();
-      }
+    barba.hooks.after((data) => {
+        // First refresh ScrollTrigger without initializing stacking
+        refreshScrollTrigger(false);
+
+        // Initialize stacking effect after every page transition
+        if (typeof initStackingEffect === "function") {
+            initStackingEffect();
+        }
+        window.scrollTo(0, 0);
     });
 
+    // Initialize Barba with transitions
     barba.init({
-      transitions: [
-        {
-          name: "custom-transition",
-          async leave(data) {
-            // Stop Lenis instance during the transition
-            if (lenisInstance) lenisInstance.stop();
-            const done = this.async();
-            const tl = gsap.timeline();
-            tl.to(".overlay", { opacity: 0.8, duration: dur, ease: ease })
-              .to(
-                data.current.container,
-                { scale: scaleAmount, borderRadius, duration: dur, ease: ease },
-                "<"
-              )
-              .to(
-                ".white-drawer",
-                { y: "0%", duration: dur, ease: ease, onComplete: done },
-                "<"
-              );
-            await tl;
-          },
-          async enter(data) {
-            // Update body class and reset scroll position
-            checkAndUpdateBodyClass();
-            resetScroll();
-            const tl = gsap.timeline();
-            tl.add(() => {
-              gsap.set(".white-drawer", { y: "100%" });
-              gsap.set(".overlay", { opacity: 0 });
-            })
-              .add(() => {
-                pageEnterAnimations();
-                bgConfig();
-              })
-              .add(() => {
-                // Kill existing ScrollTriggers and refresh
-                ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-                refreshScrollTrigger();
-              });
-            await tl;
-          },
-          async once(data) {
-            // Initialize stacking effect and Webflow interactions once
-            if (typeof initStackingEffect === "function") initStackingEffect();
-            if (
-              typeof Webflow !== "undefined" &&
-              typeof Webflow.require === "function"
-            )
-              Webflow.require("ix2").init();
-            refreshScrollTrigger();
-          },
-        },
-      ],
+        transitions: [{
+            name: "custom-transition",
+
+            async leave(data) {
+                if (lenisInstance) lenisInstance.stop();
+                const done = this.async();
+
+                const tl = gsap.timeline();
+                tl.to(".overlay", { opacity: 0.8, duration: dur, ease: ease })
+                  .to(data.current.container, {
+                      scale: scaleAmount,
+                      borderRadius,
+                      duration: dur,
+                      ease: ease
+                  }, "<")
+                  .to(".white-drawer", {
+                      y: "0%",
+                      duration: dur,
+                      ease: ease,
+                      onComplete: done
+                  }, "<");
+
+                await tl;
+            },
+
+            async enter(data) {
+                checkAndUpdateBodyClass();
+                resetScroll();
+
+                const tl = gsap.timeline();
+                tl.add(() => {
+                    gsap.set(".white-drawer", { y: "100%" });
+                    gsap.set(".overlay", { opacity: 0 });
+                })
+                .add(() => {
+                    pageEnterAnimations();
+                    bgConfig();
+                })
+                .add(() => {
+                    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+                    refreshScrollTrigger(false);
+                });
+
+                await tl;
+            },
+
+            async once(data) {
+                // First refresh ScrollTrigger without stacking
+                refreshScrollTrigger(false);
+
+                // Then initialize stacking effect
+                if (typeof initStackingEffect === "function") {
+                    initStackingEffect();
+                }
+
+                if (typeof Webflow !== "undefined" && typeof Webflow.require === "function") {
+                    Webflow.require("ix2").init();
+                }
+            }
+        }]
     });
-  }
-
-  // Initialize Barba.js transitions
-  setupBarbaTransitions();
-
-  // Refresh ScrollTrigger initially
-  ScrollTrigger.refresh();
-
-  // Refresh ScrollTrigger on window resize
-  $(window).on("resize", function () {
-    ScrollTrigger.refresh();
-  });
-});
+}

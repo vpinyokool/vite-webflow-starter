@@ -64,7 +64,7 @@ export function configureScrollTrigger() {
 }
 
 // Function to refresh ScrollTrigger after transitions
-export function refreshScrollTrigger() {
+export function refreshScrollTrigger(shouldInitStack = true) {
   console.log("Refreshing ScrollTrigger");
 
   // Kill all existing ScrollTrigger instances to prevent duplicates
@@ -94,16 +94,19 @@ export function refreshScrollTrigger() {
     lenisInstance.on("scroll", ScrollTrigger.update);
   }
 
-  // Reinitialize any ScrollTrigger-dependent animations
-  if (typeof initStackingEffect === "function") {
-    initStackingEffect();
-  }
+  // Refresh ScrollTrigger to recognize new DOM elements and positions
+  ScrollTrigger.refresh();
 
   // Reinitialize Webflow interactions if Webflow is available
   if (typeof Webflow !== "undefined" && typeof Webflow.require === "function") {
     Webflow.require("ix2").init();
   }
 
-  // Refresh ScrollTrigger to recognize new DOM elements and positions
-  ScrollTrigger.refresh();
+  // Initialize stacking effect after ScrollTrigger refresh if needed
+  if (shouldInitStack && typeof initStackingEffect === "function") {
+    // Small delay to ensure ScrollTrigger is fully refreshed
+    setTimeout(() => {
+      initStackingEffect();
+    }, 100);
+  }
 }
