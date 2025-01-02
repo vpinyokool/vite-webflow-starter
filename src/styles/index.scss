@@ -253,3 +253,59 @@ svg {
 .image-wrap.--pinned[data-stack="24"] .img-inner-wrap::after {
     opacity: 1;
 }
+
+/* ------------------------- Page Loader -------------------------------------------------- */
+
+.page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--color-black);
+    z-index: 9999;
+    pointer-events: none;
+    transform-origin: center top;
+
+    .loader-number {
+        position: absolute;
+        top: var(--unit-xs);
+        left: var(--unit-xs);
+        color: white;
+    }
+}
+
+/* Hide initial page content except in editor */
+body:not(.w-editor-body) {
+    /* Only hide fade-related animations with opacity */
+    [data-transition="fade-title"],
+    [data-transition="fade-only"],
+    [data-transition="fade"],
+    .hero-line {
+        visibility: hidden;
+        will-change: opacity, transform;
+    }
+
+    /* For height transitions, let GSAP handle the initial state */
+    [data-transition="height"] {
+        will-change: height;
+    }
+}
+
+/* Ensure content is visible in editor */
+.w-editor-body {
+    /* Show fade animations in editor */
+    [data-transition="fade-title"],
+    [data-transition="fade-only"],
+    [data-transition="fade"],
+    .hero-line {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Ensure height animations are visible in editor */
+    [data-transition="height"] {
+        height: auto !important;
+        overflow: visible !important;
+    }
+}

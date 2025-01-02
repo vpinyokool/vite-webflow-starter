@@ -37,44 +37,71 @@ export function animateElements(selector, animation) {
 }
 
 export function pageEnterAnimations() {
-  splitAndAnimateText();
+  // Create a master timeline
+  const masterTl = gsap.timeline();
+
+  // Set initial states for all elements
+  const fadeElements = $('[data-transition="fade"], [data-transition="fade-title"], [data-transition="fade-only"]');
+  const heightElements = $('[data-transition="height"]');
+
+  // Set initial states - note we're not including .hero-line here anymore
+  gsap.set(fadeElements, { visibility: "visible", opacity: 0 });
+  gsap.set(heightElements, { height: 0, overflow: "hidden" });
+
+  // Explicitly set hero-line visibility
+  gsap.set('.hero-line', { visibility: "visible" });
+
+  // Add a label to synchronize all animations
+  masterTl.addLabel("start");
+
+  // Fade animations
   animateElements('[data-transition="fade"]', function (elements) {
-    gsap.set(elements, { opacity: 0, y: 30 });
-    return gsap.to(elements, {
+    gsap.set(elements, { y: 30 });
+    masterTl.to(elements, {
       opacity: 1,
       y: 0,
-      duration: dur,
+      duration: dur * 2,
       ease: ease,
       stagger: 0.1,
-    });
+    }, "start");
   });
 
+  // Height animations
   animateElements('[data-transition="height"]', function (elements) {
-    gsap.set(elements, { height: 0, overflow: "hidden" });
-    return gsap.to(elements, { height: "auto", duration: dur, ease: ease });
+    masterTl.to(elements, {
+      height: "auto",
+      duration: dur * 2,
+      ease: ease,
+    }, "start");
   });
 
+  // Fade title animations
   animateElements('[data-transition="fade-title"]', function (elements) {
-    gsap.set(elements, { opacity: 0 });
-    return gsap.to(elements, {
+    masterTl.to(elements, {
       opacity: 1,
-      duration: dur,
+      duration: dur * 2,
       ease: ease,
       stagger: 0.3,
-    });
+    }, "start");
   });
 
+  // Fade only animations
   animateElements('[data-transition="fade-only"]', function (elements) {
-    gsap.set(elements, { opacity: 0 });
-    return gsap.to(elements, { opacity: 1, duration: dur, ease: ease });
+    masterTl.to(elements, {
+      opacity: 1,
+      duration: dur * 2,
+      ease: ease,
+    }, "start");
   });
 
-  const tl = gsap.timeline();
-  tl.add(() => {
-    splitAndAnimateText();
-  }).add(() => {
+  // Add text animations - now handled separately for better control
+  splitAndAnimateText(masterTl, "start");
+
+  // Add Lenis resize after all animations
+  masterTl.add(() => {
     if (lenisInstance) lenisInstance.resize();
   }, "+=0.1");
 
-  return tl;
+  return masterTl;
 }
+
