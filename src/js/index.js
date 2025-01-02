@@ -1,4 +1,8 @@
 /* index.js */
+/* index.js */
+/* index.js */
+
+/* index.js */
 // === Main Initialization and Barba.js Transitions ===
 
 // Import necessary styles and libraries
