@@ -8,7 +8,7 @@ let lenisInstance = null;
 export function initializeLenis() {
   if (isDesktopDevice()) {
     lenisInstance = new Lenis({
-      lerp: 0.08, // Smoothing factor
+      lerp: 0.12, // Smoothing factor
       wheelMultiplier: 1, // Mouse wheel scroll speed
       smoothWheel: true, // Enable smooth wheel scrolling
       infinite: false, // Disable infinite scrolling

@@ -40,7 +40,7 @@ $blending: overlay;
 
 /* ------------------------- Gradient stuff -------------------------------------------------- */
 
-svg {
+svg.heroBG {
     position: fixed;
     top: 0;
     left: 0;
@@ -64,6 +64,7 @@ svg {
     width: 100%;
     height: 100%;
     filter: url(#goo) blur(32px);
+    position: relative;
 }
 
 .g1,
@@ -72,6 +73,10 @@ svg {
     position: absolute;
     mix-blend-mode: $blending;
     opacity: 1;
+
+    .is--dark & {
+        opacity: 0.4;
+    }
 }
 
 .g1 {
@@ -85,7 +90,7 @@ svg {
     top: calc(50% - $circle-size-1 / 2);
     left: calc(50% - $circle-size-1 / 2);
     transform-origin: 30% 50%;
-    animation: moveInCircle 30s ease infinite;
+    animation: moveInCircle 30s var(--cubic-default) infinite;
 
     @media (max-width: 478px) {
         transform-origin: 45% 48%;
@@ -104,7 +109,7 @@ svg {
     top: calc(50% - $circle-size-2 / 2);
     left: calc(50% - $circle-size-2 / 2);
     transform-origin: 30% 50%;
-    animation: moveVertical 30s ease infinite;
+    animation: moveVertical 30s var(--cubic-default) infinite;
 
     @media (max-width: 478px) {
         display: none;
@@ -136,20 +141,6 @@ svg {
     min-height: 100vh;
 }
 
-/* This ensures content is visible in Webflow editor */
-.w-editor-body {
-    [data-transition="height"] {
-        height: auto !important;
-        overflow: visible !important;
-    }
-
-    [data-transition="fade-title"],
-    [data-transition="fade-only"],
-    [data-transition="fade"] {
-        opacity: 1 !important;
-        transform: none !important;
-    }
-}
 
 /* ------------------------- Hero animation -------------------------------------------------- */
 
@@ -167,13 +158,17 @@ svg {
 
 .hero-sub-text:after {
     width: 0;
-    transition: all 400ms ease;
+    transition: all var(--duration-default) var(--cubic-default);
     content: " ";
     position: absolute;
     bottom: 0;
     height: 1px;
     left: 0;
-    background: var(--color-title);
+    background: var(--color-black);
+
+    .is--dark & {
+        background: var(--color-white);
+    }
 }
 
 .hero-line.ready .hero-sub-text:after {
@@ -187,12 +182,39 @@ svg {
 /* ------------------------- Nav states -------------------------------------------------- */
 
 .nav {
-    color: black;
-    transition: all 400ms ease;
+    color: var(--color-black);
+    --icon-color: var(--color-black);
+    border-bottom: 1px solid transparent;
+    transition: color var(--duration-default) var(--cubic-default),
+                background-color var(--duration-default) var(--cubic-default),
+                border-bottom var(--duration-default) var(--cubic-default);
+    will-change: color, background-color, border-color;
+    background-color: transparent;
+    &.is--scrolled {
+        background-color: var(--color-white);
+        border-bottom: 1px solid color-mix(in srgb, var(--color-black) 20%, transparent);
+    }
+    .is--dark & {
+        color: var(--color-white);
+        --icon-color: var(--color-white);
+        background-color: var(--color-black);
+
+        &.is--scrolled {
+            border-bottom: 1px solid color-mix(in srgb, var(--color-white) 20%, transparent);
+        }
+    }
 }
 
 ._on-project .nav {
-    color: white;
+    color: var(--color-white);
+    --icon-color: var(--color-white);
+    background-color: transparent;
+    &.is--scrolled {
+        color: var(--color-black);
+        --icon-color: var(--color-black);
+        background-color: var(--color-white);
+        border-bottom: 1px solid color-mix(in srgb, var(--color-black) 20%, transparent);
+    }
 }
 
 /* ------------------------- stackOpacity effect -------------------------------------------------- */
@@ -212,6 +234,12 @@ svg {
     pointer-events: none;
     background: var(--color-sketch-bg);
     opacity: 0;
+}
+
+.img-inner-wrap::after {
+    .is--dark & {
+        background: var(--color-sketch-bg-dark);
+    }
 }
 
 .image-wrap.--pinned[data-stack="0"] .img-inner-wrap::after {
@@ -272,8 +300,11 @@ svg {
         top: var(--unit-xs);
         left: var(--unit-xs);
         color: white;
+        transform-origin: center top;
     }
 }
+
+/* ------------------------- Editor -------------------------------------------------- */
 
 /* Hide initial page content except in editor */
 body:not(.w-editor-body) {
@@ -292,6 +323,23 @@ body:not(.w-editor-body) {
     }
 }
 
+/* This ensures content is visible in Webflow editor */
+.w-editor-body {
+    [data-transition="height"] {
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    [data-transition="fade-title"],
+    [data-transition="fade-only"],
+    [data-transition="fade"] {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
+
+
 /* Ensure content is visible in editor */
 .w-editor-body {
     /* Show fade animations in editor */
@@ -309,3 +357,49 @@ body:not(.w-editor-body) {
         overflow: visible !important;
     }
 }
+
+/* Hide gradient elements and page loader in Webflow editor */
+.w-editor-body {
+    .g-container,
+    .gi,
+    .g1,
+    .g2,
+    .page-loader {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        position: absolute !important;
+        width: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        clip: rect(0 0 0 0) !important;
+        margin: -1px !important;
+        padding: 0 !important;
+        border: 0 !important;
+    }
+
+    /* Additional fixes for page-loader */
+    .page-loader {
+        display: none !important;
+        z-index: -9999 !important;
+        transform: translateY(-100%) !important;
+    }
+
+    /* Ensure body can scroll properly */
+    body {
+        overflow: auto !important;
+        height: auto !important;
+    }
+}
+
+/* ------------------------- Theme Transitions -------------------------------------------------- */
+
+body {
+    transition: background-color var(--duration-default) var(--cubic-default);
+
+    &.dark {
+        background-color: var(--color-black);
+        color: var(--color-white);
+    }
+}
+

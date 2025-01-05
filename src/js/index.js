@@ -16,103 +16,23 @@ import { pageEnterAnimations, checkAndUpdateBodyClass, resetScroll } from "/js/a
 import { bgConfig } from "/js/heroBg.js";
 import { dur, ease, scaleAmount, borderRadius } from "/js/constants.js";
 
+// === Constants ===
+const SCROLL_THRESHOLD = 32; // Threshold for nav scroll state in pixels
+
 // === GSAP Setup ===
 gsap.registerPlugin(ScrollTrigger);
 
-// === Loading Animation ===
-// Real loading progress function (commented out for now)
-/*
-function initializeLoader() {
-    return new Promise((resolve) => {
-        const $loader = $('.page-loader');
-        const $number = $('.loader-number');
-        let progress = 0;
-        let loadedItems = 0;
-        let totalItems = 0;
+// Function to handle nav scroll state
+function handleNavScroll() {
+    const $nav = $('.nav');
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-        // Count total items to load
-        const images = $('img').length;
-        const videos = $('video').length;
-        const iframes = $('iframe').length;
-        totalItems = images + videos + iframes;
-
-        // Set initial state
-        $number.text('0');
-
-        // Function to update progress
-        function updateProgress(increment) {
-            loadedItems++;
-            progress = Math.min(Math.round((loadedItems / Math.max(totalItems, 1)) * 100), 100);
-            $number.text(progress);
-
-            if (progress >= 100) {
-                gsap.to($loader, {
-                    scaleY: 0,
-                    duration: 1,
-                    ease: "power2.inOut",
-                    onComplete: resolve
-                });
-            }
-        }
-
-        // Track image loading
-        $('img').each(function() {
-            if (this.complete) {
-                updateProgress();
-            } else {
-                $(this).on('load error', updateProgress);
-            }
-        });
-
-        // Track video loading
-        $('video').each(function() {
-            if (this.readyState >= 4) {
-                updateProgress();
-            } else {
-                $(this).on('canplaythrough error', updateProgress);
-            }
-        });
-
-        // Track iframe loading
-        $('iframe').each(function() {
-            $(this).on('load error', updateProgress);
-        });
-
-        // Fallback in case there are no trackable elements
-        if (totalItems === 0) {
-            // Simulate progress based on document ready state
-            const loadingInterval = setInterval(() => {
-                progress += 5;
-                $number.text(Math.min(progress, 100));
-
-                if (progress >= 100) {
-                    clearInterval(loadingInterval);
-                    gsap.to($loader, {
-                        scaleY: 0,
-                        duration: 1,
-                        ease: "power2.inOut",
-                        onComplete: resolve
-                    });
-                }
-            }, 50);
-        }
-
-        // Additional fallback for slow connections
-        setTimeout(() => {
-            if (progress < 100) {
-                progress = 100;
-                $number.text('100');
-                gsap.to($loader, {
-                    scaleY: 0,
-                    duration: 1,
-                    ease: "power2.inOut",
-                    onComplete: resolve
-                });
-            }
-        }, 10000); // Maximum wait time of 10 seconds
-    });
+    if (scrollTop > SCROLL_THRESHOLD) {
+        $nav.addClass('is--scrolled');
+    } else {
+        $nav.removeClass('is--scrolled');
+    }
 }
-*/
 
 // Static loader for testing
 function initializeLoader() {
@@ -124,48 +44,63 @@ function initializeLoader() {
         // Create a smooth animation timeline
         const tl = gsap.timeline();
 
-        // First phase: 0-30% quickly
+        console.log("Loader timeline created");
+
         tl.to(progress, {
             value: 30,
             duration: 0.5,
-            ease: "power1.in",
+            ease: ease,
             onUpdate: () => $number.text(Math.round(progress.value))
         })
-        // Second phase: 30-60% slower
         .to(progress, {
             value: 60,
             duration: 1,
-            ease: "power1.inOut",
+            ease: ease,
             onUpdate: () => $number.text(Math.round(progress.value))
         })
-        // Third phase: 60-90% even slower
         .to(progress, {
             value: 90,
             duration: 1.5,
-            ease: "power1.inOut",
+            ease: ease,
             onUpdate: () => $number.text(Math.round(progress.value))
         })
-        // Final phase: 90-100% quick
         .to(progress, {
             value: 100,
             duration: 0.3,
-            ease: "power1.out",
+            ease: ease,
             onUpdate: () => $number.text(Math.round(progress.value))
         })
-        // Animate out the loader
         .to($loader, {
-            scaleY: 0,
+            height: 0,
             duration: 1,
-            ease: "power2.inOut",
+            ease: ease,
+        }, "fadeOut")
+        .to($number, {
+            scale: 0.4,
+            opacity: 0,
+            duration: 1,
+            ease: ease,
             onComplete: resolve
-        });
+        }, "fadeOut");
     });
 }
 
 // === Main Initialization ===
-$(window).on("load", async function () {
+$(document).ready(function() {
+    console.log("Document ready");
+    setupBarbaTransitions();
+
+    // Add scroll event listener
+    window.addEventListener('scroll', handleNavScroll, { passive: true });
+});
+
+// Initialize on window load
+$(window).on("load", async function() {
+    console.log("Window loaded");
+
     // Wait for loader animation to complete
     await initializeLoader();
+    console.log("Loader complete");
 
     // Initialize core functionality
     window.lenisInstance = initializeLenis();
@@ -176,6 +111,7 @@ $(window).on("load", async function () {
         const raf = (time) => {
             lenisInstance.raf(time);
             requestAnimationFrame(raf);
+            handleNavScroll(); // Check nav scroll state on each frame
         };
         requestAnimationFrame(raf);
     }
@@ -183,13 +119,8 @@ $(window).on("load", async function () {
     // Initialize page animations and configuration
     initializeAnimations();
     bgConfig();
-    setupBarbaTransitions();
-
-    // Handle window resize
-    $(window).on("resize", () => ScrollTrigger.refresh());
 });
 
-// === Helper Functions ===
 function initializeAnimations() {
     pageEnterAnimations();
     checkAndUpdateBodyClass();
@@ -197,28 +128,35 @@ function initializeAnimations() {
 
 // === Barba.js Configuration ===
 function setupBarbaTransitions() {
-    // Setup Barba hooks
+    console.log("Setting up Barba");
+
     barba.hooks.beforeEnter(() => {
+        console.log("Barba beforeEnter");
         ScrollTrigger.getAll().forEach(st => st.kill());
+        // Reset theme class to prevent flashing
+        $('body').removeClass("is--dark");
     });
 
-    barba.hooks.after((data) => {
-        // First refresh ScrollTrigger without initializing stacking
-        refreshScrollTrigger(false);
+    barba.hooks.after(() => {
+        console.log("Barba after - refreshing ScrollTrigger");
+        configureScrollTrigger(); // Use configureScrollTrigger instead of refresh to ensure theme switching is initialized
 
         // Initialize stacking effect after every page transition
         if (typeof initStackingEffect === "function") {
+            console.log("Initializing stacking effect after transition");
             initStackingEffect();
         }
         window.scrollTo(0, 0);
     });
 
-    // Initialize Barba with transitions
     barba.init({
+        debug: true, // Enable Barba debug logging
+        timeout: 5000,
         transitions: [{
             name: "custom-transition",
 
             async leave(data) {
+                console.log("Barba leave");
                 if (lenisInstance) lenisInstance.stop();
                 const done = this.async();
 
@@ -241,6 +179,7 @@ function setupBarbaTransitions() {
             },
 
             async enter(data) {
+                console.log("Barba enter");
                 checkAndUpdateBodyClass();
                 resetScroll();
 
@@ -252,23 +191,14 @@ function setupBarbaTransitions() {
                 .add(() => {
                     pageEnterAnimations();
                     bgConfig();
-                })
-                .add(() => {
-                    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-                    refreshScrollTrigger(false);
                 });
 
                 await tl;
             },
 
             async once(data) {
-                // First refresh ScrollTrigger without stacking
-                refreshScrollTrigger(false);
-
-                // Then initialize stacking effect
-                if (typeof initStackingEffect === "function") {
-                    initStackingEffect();
-                }
+                console.log("Barba once - initial page load");
+                configureScrollTrigger(); // Use configureScrollTrigger for initial load too
 
                 if (typeof Webflow !== "undefined" && typeof Webflow.require === "function") {
                     Webflow.require("ix2").init();
