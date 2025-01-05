@@ -209,6 +209,7 @@ svg.heroBG {
     color: var(--color-white);
     --icon-color: var(--color-white);
     background-color: transparent;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-white) 20%, transparent);
     &.is--scrolled {
         color: var(--color-black);
         --icon-color: var(--color-black);
